@@ -5,7 +5,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 @FeignClient(
         name = "inmateClient",
         url = "https://ma.sac24.com.br/api/v1/ma-seap/localizacao",
-        fallback = InmateClientFallback.class,
+        fallback = ResourceClientFallback.class,
         configuration = FeignInmateConfiguration.class
 )
 public interface InmateClient {
