@@ -9,12 +9,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarbonMonoxide implements Serializable {
+public class ParticulateMatterType implements Serializable {
 
     private Long id;
     private String name;
-    private Double value;
-    private Double longitude;
-    private Double latitude;
-    private String timestamp;
 }

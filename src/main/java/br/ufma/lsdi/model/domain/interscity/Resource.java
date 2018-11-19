@@ -15,18 +15,18 @@ import java.util.List;
 public class Resource implements Serializable {
     private Integer id;
     private Integer uri;
-    private String created_at;
-    private String updated_at;
+    private String createdAt;
+    private String updatedAt;
     private Double lat;
     private Double lon;
     private String status;
-    private String collect_interval;
+    private String collectInterval;
     private String description;
     private String uuid;
     private String city;
     private String neighborhood;
     private String state;
-    private String postal_code;
+    private String postalCode;
     private String country;
     private List<String> capabilities;
 
