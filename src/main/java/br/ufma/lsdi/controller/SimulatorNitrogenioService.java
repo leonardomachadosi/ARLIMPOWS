@@ -38,6 +38,7 @@ public class SimulatorNitrogenioService {
     private static int i =0;
 
     private static int val = getRamdom(100);
+
     @Scheduled(fixedRate = 10)
     public static void scheduleCarbono() {
         if (val < 40) {

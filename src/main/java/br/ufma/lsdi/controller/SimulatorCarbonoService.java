@@ -1,89 +1,86 @@
 package br.ufma.lsdi.controller;
 
-import br.ufma.lsdi.model.domain.CarbonMonoxide;
-import br.ufma.lsdi.model.domain.Index;
-import br.ufma.lsdi.model.domain.auxiliar.CapabilityAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.CapabilityDataAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.Data;
-import br.ufma.lsdi.service.interscity.ResourceClient;
+import br.ufma.lsdi.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import util.IndexUtil;
 
-import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 @Service
 public class SimulatorCarbonoService {
 
+    static Random random = new Random();
+    private static double media = 0;
+    private static int i = 0;
+    private static int val = 0;
+    private static int valorInicial = 0;
+    private static int valorAnterior = 0;
+    private static boolean iniciar = true;
+
+    @Autowired
+    private static ResourceRepository resourceRepository;
+
     public static void main(String[] args) {
         scheduleCarbono();
     }
 
+    /**
+     * Função para gerar um valor randômico
+     *
+     * @param range
+     * @return inteiro
+     */
+    private static int getRamdom(int range) {
+        return random.nextInt(range);
+    }
 
-    private static Calendar calendar = Calendar.getInstance();
-        static Random random = new Random();
+    /**
+     * Função para gerar um valor randômico negativo e positivo
+     *
+     * @return inteiro
+     */
+    private static int geraRamdomNegativo() {
+        int[] range = {0, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
+        int vaRamdom = random.nextInt(11);
+        return range[vaRamdom];
+    }
 
-  private static int getRamdom(int range){
-      return random.nextInt(range);
-  }
+    /**
+     * Função para gerar um valor randômico inicial
+     *
+     * @return
+     */
+    private static void gerarValorInicial(){
+        int[] range = new int[75];
+        int aux =25;
+        for (int i = 0; i < 75; i++ ){
+            range[i] = aux;
+            aux++;
+        }
+        valorInicial =  range[getRamdom(75)];
+    }
 
-    private static int geraRamdomNegativo(){
-      int [] range = {0,-5,-4,-3,-2,-1,0,1,2,3,4,5};
-      int val_ramdom = random.nextInt(11);
-      return range[val_ramdom];
-  }
-
-
-
-    private static double media =0;
-    private static int i =0;
-
-    private static int val = getRamdom(10);
-    @Scheduled(fixedRate = 1000)
+    /**
+     * Função para enviar dados simulados para a plataforma InterSCity
+     */
+    @Scheduled(fixedRate = 1000) //300000
     public static void scheduleCarbono() {
+        if(iniciar){
 
-         CarbonMonoxide carbonMonoxide = new CarbonMonoxide();
-
-        if (val < 4){
-            val = val +1;
-        } else if(val > 50){
-            val = val - getRamdom(10);
-        }else{
-            val = val + geraRamdomNegativo();
         }
 
-        i=i+1;
-        media = ((media + val) /2);
-        //System.out.println(media);
-
-        if (i == 12) {
-            int indexScore = IndexUtil.calculateIndex(media, IndexUtil.CARBON_MONOXIDE_8H);
-            System.out.println(IndexUtil.getIndexQuality(indexScore));
-
-            Data data = new Data();
-            List<CapabilityDataAuxiliar> listCapabilityDataAuxiliar = new ArrayList<>();
-            CapabilityDataAuxiliar capabilityDataAuxiliar = new CapabilityDataAuxiliar();
-            capabilityDataAuxiliar.setTimestamp(calendar.getTime().toString());
-            capabilityDataAuxiliar.setLat(-2.481841);
-            capabilityDataAuxiliar.setLon(-44.259712);
-            capabilityDataAuxiliar.setValue(indexScore);
-            listCapabilityDataAuxiliar.add(capabilityDataAuxiliar);
-            data.setData(listCapabilityDataAuxiliar);
-
-            i=0;
-        media=0;
-        }
-        //System.out.println(indexScore);
     }
 
 
+    private static int valPM25 = getRamdom(10);
 
-     private static int valPM25 = getRamdom(10);
     @Scheduled(fixedRate = 100)
     public static void scheduleNitrogenio() {
 
@@ -93,13 +90,13 @@ public class SimulatorCarbonoService {
 
         //CarbonMo carbonMonoxide = new CarbonMonoxide();
 
-        if (val < 4){
-            val = val +getRamdom(2);
-        }else if (val > 30){
+        if (val < 4) {
+            val = val + getRamdom(2);
+        } else if (val > 30) {
             val = val - getRamdom(5);
-        } else if(val > 50){
+        } else if (val > 50) {
             val = val - getRamdom(10);
-        }else{
+        } else {
             val = val + geraRamdomNegativo();
         }
 
