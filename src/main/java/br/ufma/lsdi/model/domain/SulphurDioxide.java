@@ -5,12 +5,12 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class SulfureDioxide implements Serializable {
+public class SulphurDioxide implements Serializable {
 
     private Long id;
+    private String name;
     private Double value;
     private Double longitude;
     private Double latitude;
     private String timestamp;
-
 }
