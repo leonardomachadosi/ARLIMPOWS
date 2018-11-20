@@ -12,6 +12,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class CapabilityDataAuxiliar implements Serializable {
 
-    private String balneabilidade;
+    private int value;
+    private Double lat;
+    private Double lon;
     private String timestamp;
 }
