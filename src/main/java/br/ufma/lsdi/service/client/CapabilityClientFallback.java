@@ -31,5 +31,10 @@ public class CapabilityClientFallback implements CapabilityClient {
         return new Data();
     }
 
+    @Override
+    public Data getLastDataForCapabilityByUuidAndName(String uuid) {
+        return new Data();
+    }
+
 
 }

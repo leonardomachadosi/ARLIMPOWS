@@ -1,12 +1,16 @@
 package br.ufma.lsdi.controller;
 
+import br.ufma.lsdi.model.domain.auxiliar.Auxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.CapabilityDataAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.Data;
-import br.ufma.lsdi.repository.ResourceRepository;
+import br.ufma.lsdi.model.domain.enums.CapabilityEnum;
+import br.ufma.lsdi.model.domain.interscity.ResourceCapability;
+import br.ufma.lsdi.repository.ResourceCapabilityRepository;
+import br.ufma.lsdi.service.interscity.CapabilityClient;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import util.IndexUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,8 +28,13 @@ public class SimulatorCarbonoService {
     private static int valorAnterior = 0;
     private static boolean iniciar = true;
 
+    private static List<Auxiliar> listaAnterior;
+
     @Autowired
-    private static ResourceRepository resourceRepository;
+    private static CapabilityClient capabilityClient;
+
+    @Autowired
+    private static ResourceCapabilityRepository resourceCapabilityRepository;
 
     public static void main(String[] args) {
         scheduleCarbono();
@@ -55,57 +64,143 @@ public class SimulatorCarbonoService {
     /**
      * Função para gerar um valor randômico inicial
      *
-     * @return
+     * @return integer
      */
-    private static void gerarValorInicial(){
+    private static int gerarValorInicial() {
         int[] range = new int[75];
-        int aux =25;
-        for (int i = 0; i < 75; i++ ){
+        int aux = 25;
+        for (int i = 0; i < 75; i++) {
             range[i] = aux;
             aux++;
         }
-        valorInicial =  range[getRamdom(75)];
+        return range[getRamdom(75)];
     }
 
     /**
      * Função para enviar dados simulados para a plataforma InterSCity
      */
-    @Scheduled(fixedRate = 1000) //300000
+
+    @Scheduled(fixedRate = 3000)
     public static void scheduleCarbono() {
-        if(iniciar){
+        List<ResourceCapability> resourceCapabilities = new ArrayList<>();
+        listaAnterior = new ArrayList<>();
+
+        resourceCapabilities =
+                resourceCapabilityRepository.findAllByCapacidadeId(CapabilityEnum.CARBOMO.getValue());
+
+        if (!resourceCapabilities.isEmpty()) {
+
+            for (ResourceCapability resourceCapability : resourceCapabilities) {
+
+
+                if (iniciar) {
+                    List<CapabilityDataAuxiliar> list = new ArrayList<>();
+                    Data data = new Data();
+                    Auxiliar auxiliar = new Auxiliar();
+                    valorInicial = gerarValorInicial();
+                    CapabilityDataAuxiliar capabilityDataAuxiliar =
+                            new CapabilityDataAuxiliar(valorInicial,
+                                    resourceCapability.getCapacidade().getLat(), resourceCapability.getCapacidade().getLon(),
+                                    new Data().toString());
+                    list.add(capabilityDataAuxiliar);
+                    data.setData(list);
+                    try {
+                        sendData(data, resourceCapability.getRecurso().getUuid());
+                        System.out.println();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    auxiliar.setCapacidades(list);
+                    auxiliar.setRecurso(resourceCapability.getRecurso());
+                    listaAnterior.add(auxiliar);
+                } else if (resourceCapability.getNovo() != null && resourceCapability.getNovo()) {
+                    List<CapabilityDataAuxiliar> list = new ArrayList<>();
+                    Data data = new Data();
+                    Auxiliar auxiliar = new Auxiliar();
+                    valorInicial = gerarValorInicial();
+                    CapabilityDataAuxiliar capabilityDataAuxiliar =
+                            new CapabilityDataAuxiliar(valorInicial,
+                                    resourceCapability.getCapacidade().getLat(), resourceCapability.getCapacidade().getLon(),
+                                    new Data().toString());
+                    list.add(capabilityDataAuxiliar);
+                    data.setData(list);
+                    try {
+                        sendData(data, resourceCapability.getRecurso().getUuid());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    auxiliar.setCapacidades(list);
+                    auxiliar.setRecurso(resourceCapability.getRecurso());
+                    listaAnterior.add(auxiliar);
+                    resourceCapability.setNovo(Boolean.FALSE);
+                    try {
+                        updateResourceCapability(resourceCapability);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    valorAnterior = 0;
+                    val = 0;
+                    for (Auxiliar auxiliar : listaAnterior) {
+                        if (auxiliar.getRecurso().getUuid().equals(resourceCapability.getRecurso().getUuid())) {
+                            for (CapabilityDataAuxiliar capability : auxiliar.getCapacidades()) {
+                                valorAnterior = capability.getValue();
+                                if (valorAnterior < 20) {
+
+                                    val = valorAnterior + getRamdom(10);
+
+                                } else if (valorAnterior > 210) {
+                                    val = valorAnterior - getRamdom(10);
+                                } else {
+                                    val = valorAnterior + geraRamdomNegativo();
+                                }
+                                List<CapabilityDataAuxiliar> list = new ArrayList<>();
+                                Data data = new Data();
+                                capability.setValue(val);
+                                CapabilityDataAuxiliar capabilityDataAuxiliar = new CapabilityDataAuxiliar();
+                                capabilityDataAuxiliar.setTimestamp(new Date().toString());
+                                capabilityDataAuxiliar.setValue(val);
+                                list.add(capabilityDataAuxiliar);
+                                data.setData(list);
+                                try {
+                                    sendData(data, resourceCapability.getRecurso().getUuid());
+                                    System.out.println();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+
+                iniciar = false;
+
+            }
 
         }
-
     }
 
 
-    private static int valPM25 = getRamdom(10);
-
-    @Scheduled(fixedRate = 100)
-    public static void scheduleNitrogenio() {
-
-        Data data = new Data();
-        List<CapabilityDataAuxiliar> listCapabilityDataAuxiliar = new ArrayList<>();
-        CapabilityDataAuxiliar capabilityDataAuxiliar = new CapabilityDataAuxiliar();
-
-        //CarbonMo carbonMonoxide = new CarbonMonoxide();
-
-        if (val < 4) {
-            val = val + getRamdom(2);
-        } else if (val > 30) {
-            val = val - getRamdom(5);
-        } else if (val > 50) {
-            val = val - getRamdom(10);
-        } else {
-            val = val + geraRamdomNegativo();
+    /**
+     * Atuliza ResourceCapability na base de dados passando o campo NOVO para FALSE
+     *
+     * @param resourceCapability
+     * @throws Exception
+     */
+    private static void updateResourceCapability(ResourceCapability resourceCapability) throws Exception {
+        try {
+            ResourceCapability capability = resourceCapabilityRepository.save(resourceCapability);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+    }
 
+    private static void sendData(Data data1, String uuid) throws Exception {
 
-        //capabilityController.sendDataToCapability("545fd940-6906-4127-8be9-af2396dbd3aa","CarbonMonoxide",data);
-
-
-        // int indexScore = IndexUtil.calculateIndexPM25_24H(4, IndexUtil.CARBON_MONOXIDE_8H);
-        //System.out.println(indexScore);
     }
 
 

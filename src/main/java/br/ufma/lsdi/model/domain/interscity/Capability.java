@@ -29,5 +29,9 @@ public class Capability implements Serializable {
     private String description;
     @Column(name = "AL02_CAPABILITYTYPE")
     private String capabilityType;
+    @Column(name = "AL02_LATITUDE")
+    private Double lat;
+    @Column(name = "AL02_LONGITUDE")
+    private Double lon;
 
 }

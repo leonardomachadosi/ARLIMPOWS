@@ -34,4 +34,7 @@ public interface CapabilityClient {
                               @PathVariable("uuid") String uuid,
                               @PathVariable("capability") String capability);
 
+    @RequestMapping(method = RequestMethod.POST, value = "/adaptor/resources/{uuid}/data/last")
+    Data getLastDataForCapabilityByUuidAndName(@PathVariable("uuid") String uuid);
+
 }

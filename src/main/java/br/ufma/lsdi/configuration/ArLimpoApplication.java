@@ -1,8 +1,6 @@
 package br.ufma.lsdi.configuration;
 
 import br.ufma.lsdi.controller.SimulatorCarbonoService;
-import br.ufma.lsdi.controller.SimulatorNitrogenioService;
-import br.ufma.lsdi.controller.SimulatorPM25Service;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,7 +26,7 @@ public class ArLimpoApplication extends SpringBootServletInitializer {
     }
 
     @Bean
-    public ThreadPoolTaskScheduler threadPoolTaskScheduler(){
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
         ThreadPoolTaskScheduler threadPoolTaskScheduler
                 = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(200);
@@ -38,13 +36,10 @@ public class ArLimpoApplication extends SpringBootServletInitializer {
     }
 
 
-
     @Bean
-    public CommandLineRunner run()  {
+    public CommandLineRunner run() {
         return args -> {
-            //SimulatorCarbonoService simulatorService = new SimulatorCarbonoService();
-            //SimulatorNitrogenioService simulatorNitrogenioService = new SimulatorNitrogenioService();
-            SimulatorPM25Service simulatorPM25Service = new SimulatorPM25Service();
+            SimulatorCarbonoService simulatorCarbonoService = new SimulatorCarbonoService();
         };
     }
 }

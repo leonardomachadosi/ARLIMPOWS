@@ -34,4 +34,7 @@ public class ResourceCapability {
     @JoinColumn(name = "FKAL03AL02_COD_CAPACIDADE")
     private Capability capacidade;
 
+    @Column(name = "AL03_NOVO")
+    private Boolean novo;
+
 }
