@@ -55,7 +55,7 @@ public class SimulatorPM25Service {
         //System.out.println(media);
 
         if (i == 12) {
-            int indexScore = IndexUtil.calculateIndex(media, IndexUtil.CARBON_MONOXIDE_8H);
+            int indexScore = IndexUtil.calculateIndex(media, IndexUtil.PM25);
             System.out.println(IndexUtil.getIndexQuality(indexScore));
 
             Data data = new Data();
