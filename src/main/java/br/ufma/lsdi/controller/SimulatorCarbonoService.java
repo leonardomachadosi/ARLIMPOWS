@@ -80,7 +80,7 @@ public class SimulatorCarbonoService {
      * Função para enviar dados simulados para a plataforma InterSCity
      */
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 300000)
     public static void scheduleCarbono() {
         List<ResourceCapability> resourceCapabilities = new ArrayList<>();
         listaAnterior = new ArrayList<>();
@@ -175,7 +175,6 @@ public class SimulatorCarbonoService {
                     }
 
                 }
-
 
                 iniciar = false;
 
