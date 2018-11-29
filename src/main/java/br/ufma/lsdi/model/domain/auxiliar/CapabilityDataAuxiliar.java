@@ -1,5 +1,6 @@
 package br.ufma.lsdi.model.domain.auxiliar;
 
+import br.ufma.lsdi.model.domain.interscity.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class CapabilityDataAuxiliar implements Serializable {
 
-    private int value;
-    private Double lat;
-    private Double lon;
+    private Double value;
     private String timestamp;
+    private Resource resource;
 
 }

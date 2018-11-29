@@ -2,7 +2,6 @@ package br.ufma.lsdi.controller;
 
 import br.ufma.lsdi.model.domain.auxiliar.ResourceAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceDataAuxiliar;
-import br.ufma.lsdi.model.domain.auxiliar.ResourceData;
 import br.ufma.lsdi.model.domain.interscity.Resource;
 import br.ufma.lsdi.service.interscity.ResourceClient;
 import org.springframework.http.HttpStatus;
@@ -30,17 +29,17 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/getResourceByUuid/{uuid}", method = RequestMethod.GET)
-    public ResponseEntity<ResourceData> getResourceByUuid(@PathVariable String uuid) {
+    public ResponseEntity<Resource> getResourceByUuid(@PathVariable String uuid) {
         ResourceDataAuxiliar auxiliar = resourceClient.getResourceByUuid(uuid);
-        ResourceData resource = auxiliar.getData();
+        Resource resource = auxiliar.getData();
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/saveResource", method = RequestMethod.POST)
-    public ResponseEntity<ResourceData> saveResource(@RequestBody ResourceDataAuxiliar aux) {
+    public ResponseEntity<Resource> saveResource(@RequestBody ResourceDataAuxiliar aux) {
         ResourceDataAuxiliar auxiliar2 = resourceClient.saveResource(aux);
-        ResourceData resource = auxiliar2.getData();
+        Resource resource = auxiliar2.getData();
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
