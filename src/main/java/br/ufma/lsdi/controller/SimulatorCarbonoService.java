@@ -6,11 +6,8 @@ import br.ufma.lsdi.model.domain.auxiliar.Data;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceDataAuxiliar;
 import br.ufma.lsdi.model.domain.interscity.Resource;
 import br.ufma.lsdi.model.domain.interscity.ResourceCapability;
-import br.ufma.lsdi.service.interscity.CapabilityClient;
 import br.ufma.lsdi.service.interscity.ResourceClient;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import util.Util;
 
@@ -58,6 +55,7 @@ public class SimulatorCarbonoService {
                 data = new CapabilityDataAuxiliar();
             }
         }
+
 
     }
 
