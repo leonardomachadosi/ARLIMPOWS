@@ -1,7 +1,9 @@
 package br.ufma.lsdi.service.interscity;
 
+import br.ufma.lsdi.model.domain.Catalog;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceDataAuxiliar;
+import br.ufma.lsdi.model.domain.auxiliar.ResourceHelper;
 import br.ufma.lsdi.service.client.FeignInmateConfiguration;
 import br.ufma.lsdi.service.client.ResourceClientFallback;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -24,4 +26,6 @@ public interface ResourceClient {
     @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/{uuid}")
     ResourceDataAuxiliar getResourceByUuid(@PathVariable("uuid") String uuid);
 
+    @RequestMapping(method = RequestMethod.POST, value = "/collector/resources/data")
+    ResourceHelper getAllData(@RequestBody Catalog catalog);
 }

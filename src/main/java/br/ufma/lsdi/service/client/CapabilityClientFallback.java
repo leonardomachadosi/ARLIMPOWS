@@ -1,8 +1,9 @@
 package br.ufma.lsdi.service.client;
 
+import br.ufma.lsdi.model.domain.Catalog;
 import br.ufma.lsdi.model.domain.auxiliar.CapabilityAuxiliar;
-import br.ufma.lsdi.model.domain.auxiliar.CapabilityDataAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.Data;
+import br.ufma.lsdi.model.domain.auxiliar.ResourceHelper;
 import br.ufma.lsdi.model.domain.interscity.Capability;
 import br.ufma.lsdi.service.interscity.CapabilityClient;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,5 @@ public class CapabilityClientFallback implements CapabilityClient {
     public Data getLastDataForCapabilityByUuidAndName(String uuid) {
         return new Data();
     }
-
 
 }

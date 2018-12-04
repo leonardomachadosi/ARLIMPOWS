@@ -17,12 +17,14 @@ public class CapabiltyDataService {
     private List<PollutionData> instanciasCVS;
     private static Resource resource = new Resource();
 
-    public List<CapabilityDataAuxiliar> getDataByCapability(Resource resource, String capability, String ano)  {
+    public List<CapabilityDataAuxiliar> getDataByCapability(Resource resource, String capability, String ano) throws Exception {
         try {
-            instanciasCVS = Util.lerInstanciasPollution("C:\\madrid\\Madrid"+ano+".csv");
+            instanciasCVS = Util.lerInstanciasPollution("C:\\madrid\\Madrid" + ano + ".csv");
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -39,7 +41,7 @@ public class CapabiltyDataService {
     private CapabilityDataAuxiliar montarData(Resource resource, PollutionData pollutionData, String capability) {
         CapabilityDataAuxiliar data = new CapabilityDataAuxiliar();
         data.setTimestamp(pollutionData.getDate());
-        //data.setResource(resource);
+        data.setResource(resource);
         if (capability.equals(IndexUtil.OZONE)) {
             data.setValue(pollutionData.getOzoneO3());
         } else if (capability.equals(capability.equals(IndexUtil.NITROGEN_DIOXIDE))) {
@@ -51,6 +53,8 @@ public class CapabiltyDataService {
         } else {
             data.setValue(pollutionData.getParticlesPM25());
         }
+        data.setLat(resource.getLat());
+        data.setLon(resource.getLon());
         return data;
     }
 }

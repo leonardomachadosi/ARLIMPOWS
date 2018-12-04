@@ -15,6 +15,8 @@ public class CapabilityDataAuxiliar implements Serializable {
 
     private Double value;
     private String timestamp;
+    private Double lat;
+    private Double lon;
     private Resource resource;
 
 }
