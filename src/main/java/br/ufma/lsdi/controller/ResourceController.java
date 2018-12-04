@@ -42,14 +42,14 @@ public class ResourceController {
 
 
         CapabiltyDataService capabiltyDataService = new CapabiltyDataService();
-     List<CapabilityDataAuxiliar> listData = new ArrayList<>();
-     listData = capabiltyDataService.getDataByCapability(getResource(),capability,ano);
-     Data data = new Data();
-     data.setData(listData);
+        List<CapabilityDataAuxiliar> listData = new ArrayList<>();
+        listData = capabiltyDataService.getDataByCapability(resourceAux.getData(),capability,ano);
+        Data data = new Data();
+        data.setData(listData);
 
-     capabilityClient.saveCapabilityData(data, uuid, capability);
+        capabilityClient.saveCapabilityData(data, uuid, capability);
 
-     return new ResponseEntity<>(getResource(), HttpStatus.OK);
+        return new ResponseEntity<>(resourceAux.getData(), HttpStatus.OK);
     }
 
 /*
@@ -85,7 +85,7 @@ public class ResourceController {
 
     private static Resource getResource(){
         Resource resource = new Resource();
-          resource.setDescription("ESTAÇÃO PRAIA PONTA DA AREA");
+        resource.setDescription("ESTAÇÃO PRAIA PONTA DA AREA");
         resource.setUuid("70b8f4fe-3f17-4dcb-beff-cfb586fb344f");
 
         return resource;
