@@ -23,9 +23,12 @@ public class SimulatorCarbonoService {
     private static Resource resource = new Resource();
     private static ResourceDataAuxiliar resourceDataAuxiliar;
 
-    @Autowired
+
     private static ResourceClient resourceClient ;
 
+    public SimulatorCarbonoService(ResourceClient resourceClient) {
+
+    }
 
     public static void main(String[] args) throws FileNotFoundException, ParseException {
         instanciasCVS = Util.lerInstanciasPollution("Madrid2001.csv");
@@ -50,7 +53,7 @@ public class SimulatorCarbonoService {
             if (pollutionData.getStation().equals("28079024")) {
                 data.setValue(pollutionData.getNitrogenDioxideNO2());
                 data.setTimestamp(pollutionData.getDate());
-                data.setResource(resource);
+               // data.setResource(resource);
                 listData.add(data);
                 data = new CapabilityDataAuxiliar();
             }

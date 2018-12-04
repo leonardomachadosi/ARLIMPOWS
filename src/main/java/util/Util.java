@@ -3,9 +3,7 @@ package util;
 
 import br.ufma.lsdi.model.domain.PollutionData;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -68,4 +66,31 @@ public class Util {
         }
     }
 
+
+    private static final String path = "C:\\arquivos";
+    public static void gravarArquivo(String nomeArquivo, String dados) throws IOException {
+       try{
+        // Cria arquivo
+        File file = new File(nomeArquivo);
+
+        // Se o arquivo nao existir, ele gera
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        // Prepara para escrever no arquivo
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        // Escreve e fecha arquivo
+        bw.write(dados);
+        bw.close();
+
+
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+}
 }

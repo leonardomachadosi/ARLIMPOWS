@@ -39,7 +39,7 @@ public class ArLimpoApplication extends SpringBootServletInitializer {
     @Bean
     public CommandLineRunner run() {
         return args -> {
-            SimulatorCarbonoService simulatorCarbonoService = new SimulatorCarbonoService();
+            //SimulatorCarbonoService simulatorCarbonoService = new SimulatorCarbonoService();
         };
     }
 }

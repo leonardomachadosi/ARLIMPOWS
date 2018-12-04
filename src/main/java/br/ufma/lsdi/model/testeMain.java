@@ -4,7 +4,6 @@ import br.ufma.lsdi.model.domain.PollutionData;
 import br.ufma.lsdi.model.domain.auxiliar.CapabilityDataAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceDataAuxiliar;
 import br.ufma.lsdi.model.domain.interscity.Resource;
-import br.ufma.lsdi.repository.ResourceCapabilityRepository;
 import br.ufma.lsdi.service.interscity.CapabilityClient;
 import br.ufma.lsdi.service.interscity.ResourceClient;
 import com.google.gson.Gson;
@@ -13,6 +12,7 @@ import util.IndexUtil;
 import util.Util;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,34 +31,53 @@ public class testeMain {
     private static ResourceClient resourceClient ;
 
 
-    public static void main(String[] args) throws FileNotFoundException, ParseException {
+    public static void main(String[] args) throws IOException, ParseException {
 
-    instanciasCVS = Util.lerInstanciasPollution("Madrid2001.csv");
+    instanciasCVS = Util.lerInstanciasPollution("Madrid2016.csv");
 
         //resourceDataAuxiliar = resourceClient.getResourceByUuid("70b8f4fe-3f17-4dcb-beff-cfb586fb344f");
-        List<CapabilityDataAuxiliar> listData = new ArrayList<>();
+        //resource = resourceDataAuxiliar.getData();
+
+        ArrayList<CapabilityDataAuxiliar> listSulfurico = new ArrayList<>();
+        ArrayList<CapabilityDataAuxiliar> listOzone = new ArrayList<>();
+        ArrayList<CapabilityDataAuxiliar> listPM10 = new ArrayList<>();
+        ArrayList<CapabilityDataAuxiliar> listPM25 = new ArrayList<>();
+        ArrayList<CapabilityDataAuxiliar> listNitrogenio = new ArrayList<>();
         CapabilityDataAuxiliar data = new CapabilityDataAuxiliar();
         //calculatedMean(instanciasCVS);
         for (PollutionData pollutionData : instanciasCVS) {
-            if (pollutionData.getStation().equals("28079024")) {
-              data.setValue(pollutionData.getNitrogenDioxideNO2());
-              data.setTimestamp(pollutionData.getDate());
-              //data.setResource(getResource());
-              listData.add(data);
-              data = new CapabilityDataAuxiliar();
+            if (pollutionData.getStation().equals("28079018")) {
+
+              listSulfurico.add(montarData(pollutionData, pollutionData.getSulphurDioxideSO2()));
+              listOzone.add(montarData(pollutionData, pollutionData.getOzoneO3()));
+              listNitrogenio.add(montarData(pollutionData, pollutionData.getNitrogenDioxideNO2()));
+              listPM10.add(montarData(pollutionData, pollutionData.getParticlesPM10()));
+              listPM25.add(montarData(pollutionData, pollutionData.getParticlesPM10()));
         }
         }
-        System.out.println(gson.toJson(listData));
+        Util.gravarArquivo("saoMarcos"+IndexUtil.NITROGEN_DIOXIDE+"2016.txt",gson.toJson(listNitrogenio));
+        Util.gravarArquivo("saoMarcos"+IndexUtil.OZONE+"2016.txt",gson.toJson(listOzone));
+        Util.gravarArquivo("saoMarcos"+IndexUtil.SULFURE_DIOXIDE+"2016.txt",gson.toJson(listSulfurico));
+        Util.gravarArquivo("saoMarcos"+IndexUtil.PM10+"2016.txt",gson.toJson(listPM10));
+        Util.gravarArquivo("saoMarcos"+IndexUtil.PM25+"2016.txt",gson.toJson(listPM25));
+        //System.out.println(gson.toJson(listData));
 
     }
 
+    private static CapabilityDataAuxiliar montarData(PollutionData pollutionData, Double value){
+        CapabilityDataAuxiliar data = new CapabilityDataAuxiliar();
+        data.setTimestamp(pollutionData.getDate());
+        data.setResource(getResource());
+        data.setValue(value);
+        return data;
+    }
     private static Resource getResource(){
-        resource.setId(5207);
-        resource.setCreatedAt( "2018-11-28T00:39:07.470Z");
-        resource.setUpdatedAt("2018-11-28T00:39:07.470Z");
-        resource.setLat(-2.498837);
-        resource.setLon(-44.311237);
-        resource.setStatus("Ativo");
+        //resource.setId(5207);
+        //resource.setCreatedAt( "2018-11-28T00:39:07.470Z");
+        //resource.setUpdatedAt("2018-11-28T00:39:07.470Z");
+        //resource.setLat(-2.498837);
+        //resource.setLon(-44.311237);
+       // resource.setStatus("Ativo");
         resource.setDescription("ESTAÇÃO PRAIA PONTA DA AREA");
         resource.setUuid("70b8f4fe-3f17-4dcb-beff-cfb586fb344f");
         List<String> capabilities= Arrays.asList(
