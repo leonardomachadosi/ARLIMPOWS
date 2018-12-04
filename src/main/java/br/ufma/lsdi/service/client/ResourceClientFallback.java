@@ -1,7 +1,9 @@
 package br.ufma.lsdi.service.client;
 
+import br.ufma.lsdi.model.domain.Catalog;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceDataAuxiliar;
+import br.ufma.lsdi.model.domain.auxiliar.ResourceHelper;
 import br.ufma.lsdi.service.interscity.ResourceClient;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,11 @@ public class ResourceClientFallback implements ResourceClient{
     @Override
     public ResourceDataAuxiliar getResourceByUuid(String uuid) {
         return new ResourceDataAuxiliar();
+    }
+
+    @Override
+    public ResourceHelper getAllData(Catalog catalog) {
+        return new ResourceHelper();
     }
 
 

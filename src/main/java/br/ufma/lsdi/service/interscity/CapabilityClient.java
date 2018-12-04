@@ -1,8 +1,9 @@
 package br.ufma.lsdi.service.interscity;
 
+import br.ufma.lsdi.model.domain.Catalog;
 import br.ufma.lsdi.model.domain.auxiliar.CapabilityAuxiliar;
-import br.ufma.lsdi.model.domain.auxiliar.CapabilityDataAuxiliar;
 import br.ufma.lsdi.model.domain.auxiliar.Data;
+import br.ufma.lsdi.model.domain.auxiliar.ResourceHelper;
 import br.ufma.lsdi.model.domain.interscity.Capability;
 import br.ufma.lsdi.service.client.CapabilityClientFallback;
 import br.ufma.lsdi.service.client.FeignInmateConfiguration;
@@ -31,8 +32,8 @@ public interface CapabilityClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/adaptor/resources/{uuid}/data/{capability}")
     Data saveCapabilityData(@RequestBody Data data,
-                              @PathVariable("uuid") String uuid,
-                              @PathVariable("capability") String capability);
+                            @PathVariable("uuid") String uuid,
+                            @PathVariable("capability") String capability);
 
     @RequestMapping(method = RequestMethod.POST, value = "/adaptor/resources/{uuid}/data/last")
     Data getLastDataForCapabilityByUuidAndName(@PathVariable("uuid") String uuid);
