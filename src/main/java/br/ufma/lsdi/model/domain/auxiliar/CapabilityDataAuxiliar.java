@@ -18,5 +18,8 @@ public class CapabilityDataAuxiliar implements Serializable {
     private Double lat;
     private Double lon;
     private Resource resource;
+    //private int dia;
+    //private int mes;
+    //private int ano;
 
 }
