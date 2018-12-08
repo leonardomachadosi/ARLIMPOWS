@@ -67,7 +67,6 @@ public class Util {
     }
 
 
-    private static final String path = "C:\\arquivos";
     public static void gravarArquivo(String nomeArquivo, String dados) throws IOException {
         try{
             // Cria arquivo
