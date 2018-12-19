@@ -8,7 +8,7 @@ import br.ufma.lsdi.service.interscity.ResourceClient;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ResourceClientFallback implements ResourceClient{
+public class ResourceClientFallback implements ResourceClient {
     @Override
     public ResourceAuxiliar getResource() {
         return new ResourceAuxiliar();
@@ -27,6 +27,21 @@ public class ResourceClientFallback implements ResourceClient{
     @Override
     public ResourceHelper getAllData(Catalog catalog) {
         return new ResourceHelper();
+    }
+
+    @Override
+    public ResourceAuxiliar getAllResourceByCapability() {
+        return new ResourceAuxiliar();
+    }
+
+    @Override
+    public ResourceHelper getLastData(Catalog catalog) {
+        return new ResourceHelper();
+    }
+
+    @Override
+    public ResourceAuxiliar getAllResourceSensor() {
+        return new ResourceAuxiliar();
     }
 
 

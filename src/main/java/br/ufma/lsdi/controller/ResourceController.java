@@ -6,7 +6,6 @@ import br.ufma.lsdi.model.domain.auxiliar.Data;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceHelper;
 import br.ufma.lsdi.model.domain.auxiliar.ResourceDataAuxiliar;
 import br.ufma.lsdi.model.domain.interscity.Resource;
-import br.ufma.lsdi.service.CapabiltyDataService;
 import br.ufma.lsdi.service.interscity.CapabilityClient;
 import br.ufma.lsdi.service.interscity.ResourceClient;
 import org.springframework.http.HttpStatus;
@@ -40,10 +39,10 @@ public class ResourceController {
         resourceAux = resourceClient.getResourceByUuid(uuid);
 
 
-        CapabiltyDataService capabiltyDataService = new CapabiltyDataService();
+        CapabiltyController capabiltyDataService = new CapabiltyController();
         List<CapabilityDataAuxiliar> listData = new ArrayList<>();
         try {
-            listData = capabiltyDataService.getDataByCapability(resourceAux.getData(), capability, ano);
+           // listData = capabiltyDataService.getDataByCapability(resourceAux.getData(), capability, ano);
         } catch (Exception e) {
             e.printStackTrace();
         }

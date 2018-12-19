@@ -1,96 +1,105 @@
 package util;
 
 
-import br.ufma.lsdi.model.domain.PollutionData;
+import br.ufma.lsdi.model.domain.auxiliar.CapabilityDataAuxiliar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.*;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class Util {
 
-
-    private static Calendar calendar = Calendar.getInstance();
+    public static String PM25 = "PM25";
+    public static String PM10 = "PM10";
+    public static String OZONE = "OZONE";
+    public static String SULFURE_DIOXIDE = "SULFURE_DIOXIDE";
+    public static String NITROGEN_DIOXIDE = "NITROGEN_DIOXIDE";
     public static String URL_BASE = "http://cidadesinteligentes.lsdi.ufma.br/";
-    private static SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");// HH:mm:ss");
+    private static Gson gson = new Gson();
+    private static SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd");// HH:mm:ss");
+    private static Calendar calendar = Calendar.getInstance();
 
-    public static List<PollutionData> lerInstanciasPollution(String arquivo) throws ParseException, FileNotFoundException {
-        List<PollutionData> pollutionInstances = new ArrayList<>();
-        InputStream inputStream = new FileInputStream(arquivo);
-        CVSReader cvsReader = new CVSReader(inputStream);
-        List<String[]> linhas = cvsReader.read();
-        for (String[] linha : linhas) {
-            PollutionData data = new PollutionData(linha[6],
-                    linha[0]+".428Z",
-                    parseDouble(linha[1]),
-                    parseDouble(linha[5]),
-                    parseDouble(linha[2]),
-                    parseDouble(linha[4]),
-                    parseDouble(linha[3]));
-            pollutionInstances.add(data);
-        }
-
-        return pollutionInstances;
-    }
-
-    private static Double parseDouble(String valor) {
-        Double result;
-        Boolean teste = true;
-        StringBuilder sb = new StringBuilder();
-        String[] arrayValor =  valor.split("");
-        if (valor.length()>10){
-            for (int i =0; i<arrayValor.length; i++){
-                if (teste){
-                    sb.append(arrayValor[i]);
-
-                    if (arrayValor[i].equals(".")){
-                        sb.append(arrayValor[i+1]);
-                        sb.append(arrayValor[i+2]);
-                        teste = false;
-                    }
-                }
-
-            }
-            result =Double.parseDouble(sb.toString())+20;
-            return result;
-        }
-
-        if (valor != null && !valor.equals("")) {
-            result = Double.parseDouble(valor)+20;
-            return result;
-        } else {
-            return 0.0;
-        }
-    }
+    public static List<CapabilityDataAuxiliar>
 
 
-    public static void gravarArquivo(String nomeArquivo, String dados) throws IOException {
-        try{
-            // Cria arquivo
-            File file = new File(nomeArquivo);
-
-            // Se o arquivo nao existir, ele gera
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            // Prepara para escrever no arquivo
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-
-            // Escreve e fecha arquivo
-            bw.write(dados);
-            bw.close();
-
-
-
+    /**
+     * Ler instâncias de uma particulo dentro de um intervalo
+     */
+    getDataCapability(String ponto, String particula, String ano, Date inicio, Date fim) throws FileNotFoundException, ParseException {
+        List<CapabilityDataAuxiliar> listData;
+        List<CapabilityDataAuxiliar> listDataFiltrado = new ArrayList<>();
+        String data = null;
+        try {
+            data = new String(Files.readAllBytes(Paths.get("C:\\madrid\\" + ano + "\\" + ponto + particula + ano + ".txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        listData = gson.fromJson(data, new TypeToken<List<CapabilityDataAuxiliar>>() {
+        }.getType());
+
+        for (CapabilityDataAuxiliar dataAuxiliar : listData) {
+            Date dateAux = convertTimestampData(dataAuxiliar.getTimestamp());
+
+
+            if (((getMonth(dateAux) > getMonth(inicio) && getYear(dateAux) > getYear(inicio)) &&
+                    getMonth(dateAux) < getMonth(fim) && getYear(dateAux) < getYear(fim)) ||
+                    (getMonth(dateAux) == getMonth(inicio) && getYear(dateAux) == getYear(inicio) && getDay(dateAux) >= getDay(inicio)) ||
+                    (getMonth(dateAux) == getMonth(fim) && getYear(dateAux) == getYear(fim) && getDay(dateAux) <= getDay(inicio)) ||
+                    (getMonth(dateAux) < getMonth(inicio) && getYear(dateAux) > getYear(inicio))) {
+
+                listDataFiltrado.add(dataAuxiliar);
+            }
+        }
+
+
+        return listDataFiltrado;
     }
 
+    public static int getDay(Date date) {
+        calendar.setTime(date);
+        return calendar.get(Calendar.DATE);
+    }
+
+    public static int getMonth(Date date) {
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public static int getYear(Date date) {
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public static Date convertTimestampData(String date) {
+        String[] dateAux = date.replace(".428Z", "")
+                .replace("T", " ")
+                .replace("-", "/").split(" ");
+        try {
+            return formato.parse(dateAux[0]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static List<String[]> lerAquivoBalneabilidade(String arquivo) throws ParseException, FileNotFoundException {
+        InputStream inputStream = new FileInputStream("C:\\madrid\\"+arquivo);
+        List<CapabilityDataAuxiliar> capabilityDataAuxiliars = new ArrayList<>();
+        CsvReader cvsReader = new CsvReader(inputStream);
+        List<String[]> linhas = cvsReader.read();
+        return linhas;
+    }
 
 }

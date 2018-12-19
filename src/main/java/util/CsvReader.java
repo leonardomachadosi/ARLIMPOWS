@@ -7,11 +7,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CVSReader {
+public class CsvReader {
 
     InputStream inputStream;
 
-    public CVSReader(InputStream is){
+    public CsvReader(InputStream is){
         this.inputStream = is;
     }
 

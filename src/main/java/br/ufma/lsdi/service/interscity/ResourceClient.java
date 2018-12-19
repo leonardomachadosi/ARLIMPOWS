@@ -28,4 +28,14 @@ public interface ResourceClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/collector/resources/data")
     ResourceHelper getAllData(@RequestBody Catalog catalog);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=Balneabilidade")
+    ResourceAuxiliar getAllResourceByCapability();
+
+    @RequestMapping(method = RequestMethod.POST, value = "collector/resources/data/last")
+    ResourceHelper getLastData(@RequestBody Catalog catalog);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=PM10")
+    ResourceAuxiliar getAllResourceSensor();
+
 }
